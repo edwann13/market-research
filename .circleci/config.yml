@@ -13,8 +13,8 @@ jobs:
       - run:
           name: Setup Virtual Env
           command: |
-            vurtualenv -p python3.7 env
-            echo "source ./env/bin/activate" >> $BASH_ENV
+            python3 -m venv venv
+            echo "source venv/bin/activate" >> $BASH_ENV
       - run:
           name: Install Dependencies
           command: pip install -r requirements.txt
