@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   python: circleci/python@1.0.0
+  aws-cli: circleci/aws-cli@1.2.1
 
 jobs:
   build-and-test:
@@ -26,11 +27,39 @@ jobs:
       - run:
           name: Add App To Zipfile
           command: zip -g ./api.zip -r api
+      - persist_to_workspace:
+          root: .
+          paths:
+            - "api.zip"
+  deploy-dev:
+    executor: aws-cli/default
+    steps:
+      - attach_workspace:
+          at: ./
+      - aws-cli/setup:
+          aws-region: AWS_DEFAULT_REGION
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-sescret-access-key: AWS_SECRET_ACCESS_KEY
+      - run:
+          name: Upload to S3
+          command: aws s3 cp api.zip s3://serverless-fastapi-ed1/api.zip
+      - run:
+          name: Deploy new Lambda
+          command: aws lambda update-function-code --function-name serverless-fastapi-lambda --s3-bucket serverless-fastapi-ed1 --s3-key api.zip
 
 workflows:
   build-test-and-deploy:
     jobs:
       - build-and-test:
+          context: cicd-dev
+          filters:
+            branches:
+              only:
+                - main
+      - deploy-dev:
+          context: cicd-dev
+          requires:
+            - build-and-test
           filters:
             branches:
               only:
