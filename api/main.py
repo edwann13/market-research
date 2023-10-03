@@ -14,8 +14,6 @@ openai.api_key = "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"
 app = FastAPI()
 
 origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
     "http://localhost",
     "http://localhost:8080",
     "*"
@@ -37,10 +35,10 @@ async def root():
     # print(generateMarketingPrompt('test comapny'))
     return {"message": "Code was updated"}
 
-@app.get('/test')
-def test():
+@app.get('/market-research/{company_name}')
+def market_research(company_name):
     system_template = generateMarketingSystemTemplate()
-    human_template = generateMarketingPrompt('el aviso')
+    human_template = generateMarketingPrompt(company_name)
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         max_tokens=1000,
