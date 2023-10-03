@@ -53,6 +53,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Enter Client
+          command: cd client
+      - run:
           name: Update NPM
           command: "sudo npm install -g npm"
       # - restore_cache:
