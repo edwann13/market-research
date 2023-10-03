@@ -1,10 +1,12 @@
 import './App.css';
 import axios from 'axios';
 import { useState } from 'react';
+import ClipLoader from "react-spinners/ClipLoader";
 
 function App() {
   const [company_name, setCompanyName] = useState("");
   const [aiReply, setReply] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const lambdaUrl = "https://v7exa47g23m3yy3chav3iclgme0egtjn.lambda-url.us-west-1.on.aws/";
   // const lambdaUrl = "http://127.0.0.1:8000/"
@@ -18,11 +20,14 @@ function App() {
       const config = {
         baseURL: lambdaUrl,
       };
+      setLoading(true);
       const apiRoute = `/market-research/${company_name}`;
       const response = await axios.get(apiRoute, config);
       const reply = response.data.choices[0].message.content;
       setReply(reply);
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       console.log(err);
     }
   }
@@ -30,12 +35,13 @@ function App() {
   const resetPrompt = () => {
     setReply("");
     setCompanyName("");
+    setLoading(false);
   }
 
   return (
     <div className="App">
       <header className="App-header">
-        {aiReply.length === 0 &&
+        {(aiReply.length === 0 && !loading) &&
           <form onSubmit={getMarketResearch}>
             <label>Conduct Competitive Market Analysis</label>
             <br/>
@@ -48,6 +54,19 @@ function App() {
             </label>
             <input style={{fontSize: "15px"}} type="submit"/>
           </form>
+        }
+        {loading && 
+        <div>
+          <span>Conducting Research</span>
+          <br />
+          <ClipLoader
+          color="green"
+          loading={loading}
+          size={150}
+          aria-label='Loading Spiiner'
+          data-testid="loader"
+          />
+        </div>
         }
         {aiReply.length > 0 &&
           <div>
