@@ -92,7 +92,7 @@ workflows:
       - deploy-api:
           context: cicd-dev
           requires:
-            - build-and-test
+            - build-api
           filters:
             branches:
               only:
@@ -100,7 +100,7 @@ workflows:
       - build-client:
           context: cicd-dev
           requires:
-            - deploy-dev
+            - deploy-api
           filters:
             branches:
               only:
