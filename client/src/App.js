@@ -1,34 +1,60 @@
-import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
+import { useState } from 'react';
 
 function App() {
+  const [company_name, setCompanyName] = useState("");
+  const [aiReply, setReply] = useState("");
+
   const lambdaUrl = "https://v7exa47g23m3yy3chav3iclgme0egtjn.lambda-url.us-west-1.on.aws/";
-  const getMarketResearch = async () => {
-    const config = {
-      baseURL: lambdaUrl,
-    };
-    const response = await axios.get('/', config);
-    console.log(response);
-    return response;
+  // const lambdaUrl = "http://127.0.0.1:8000/"
+
+  const getMarketResearch = async (event) => {
+    event.preventDefault();
+    if (company_name.length === 0) {
+      return;
+    }
+    try {
+      const config = {
+        baseURL: lambdaUrl,
+      };
+      const apiRoute = `/market-research/${company_name}`;
+      const response = await axios.get(apiRoute, config);
+      const reply = response.data.choices[0].message.content;
+      setReply(reply);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const resetPrompt = () => {
+    setReply("");
+    setCompanyName("");
   }
 
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code onClick={getMarketResearch}>src/App.js</code> and save to reload.
-          THIS IS A TEST
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {aiReply.length === 0 &&
+          <form onSubmit={getMarketResearch}>
+            <label>Conduct Competitive Market Analysis</label>
+            <br/>
+            <label>Enter company name:
+              <input
+                type="text"
+                value={company_name}
+                onChange={(e) => setCompanyName(e.target.value)}
+                />
+            </label>
+            <input style={{fontSize: "15px"}} type="submit"/>
+          </form>
+        }
+        {aiReply.length > 0 &&
+          <div>
+            <p style={{margin: "0 auto", width: '70%', whiteSpace: "pre-line", fontSize: "25px"}}>{aiReply}</p>
+            <button type="button" style={{fontSize: "25px"}} onClick={resetPrompt}>Reset</button>
+          </div>
+        }
       </header>
     </div>
   );
