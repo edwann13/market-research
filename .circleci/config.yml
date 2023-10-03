@@ -5,7 +5,7 @@ orbs:
   aws-cli: circleci/aws-cli@1.2.1
 
 jobs:
-  build-and-test:
+  build-api:
     executor:
       name: python/default
       tag: '3.11'
@@ -31,7 +31,7 @@ jobs:
           root: .
           paths:
             - "api.zip"
-  deploy-dev:
+  deploy-api:
     executor: aws-cli/default
     steps:
       - attach_workspace:
@@ -46,7 +46,7 @@ jobs:
       - run:
           name: Deploy new Lambda
           command: aws lambda update-function-code --function-name serverless-fastapi-lambda --s3-bucket serverless-fastapi-ed1 --s3-key api.zip
-  build:
+  build-client:
     # working_directory: ~/repo/client
     working_directory: ~/client
     docker:
@@ -81,15 +81,15 @@ jobs:
           command: cd client && ./node_modules/.bin/netlify deploy --site $NETLIFY_SITE_ID --auth $NETLIFY_ACCESS_TOKEN --prod --dir=build
 
 workflows:
-  build-test-and-deploy:
+  build-and-deploy:
     jobs:
-      - build-and-test:
+      - build-api:
           context: cicd-dev
           filters:
             branches:
               only:
                 - main
-      - deploy-dev:
+      - deploy-api:
           context: cicd-dev
           requires:
             - build-and-test
@@ -97,7 +97,7 @@ workflows:
             branches:
               only:
                 - main
-      - build:
+      - build-client:
           context: cicd-dev
           requires:
             - deploy-dev
