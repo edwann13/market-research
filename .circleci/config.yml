@@ -99,6 +99,8 @@ workflows:
                 - main
       - build:
           context: cicd-dev
+          requires:
+            - deploy-dev
           filters:
             branches:
               only:
