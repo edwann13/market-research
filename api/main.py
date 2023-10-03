@@ -1,18 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import openai
-# from langchain.prompts import PromptTemplate
-# from langchain.llms import OpenAI
-# from langchain.chat_models import ChatOpenAI
-# from langchain.prompts.chat import ChatPromptTemplate
 from mangum import Mangum
 import os
 
-
-# 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
-# openai.api_key = "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"
-# openai.api_key = "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"
-# openai.api_key = "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"
 openai.api_key = os.environ['OPEN_AI_KEY']
 
 app = FastAPI()
@@ -33,12 +24,9 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    # print(openai)
-    # print(FastAPI)
-    # print(prompts)
-    # print(generateMarketingPrompt('test comapny'))
     return {"message": "Code was updated"}
 
+# Endpoint to Conduct Market Research In Open AI
 @app.get('/market-research/{company_name}')
 def market_research(company_name):
     system_template = generateMarketingSystemTemplate()
@@ -51,28 +39,18 @@ def market_research(company_name):
             {"role": "user", "content": human_template}
         ]
     )
-    print(response)
     return response
-# @app.get("/lang")
-# def langChain():
-#     system_template = generateMarketingSystemTemplate()
-#     human_template = generateMarketingPrompt("involve.ai")
-#     chat_prompt = ChatPromptTemplate.from_messages([
-#         ('system', system_template),
-#         ('human', human_template)
-#     ])
-#     chain = chat_prompt | ChatOpenAI(openai_api_key="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", max_tokens=1000)
-#     response = chain.invoke({})
-#     return response
 
+# Generate Human Prompt based on the company named provided
 def generateMarketingPrompt(company_name):
-    # text = "Conduct competitive marketing research on {company_name}. I want to know what is their competitive advantage, what customers dislike and like about the product and who are their biggest competitors.\nWhat is {company_name} competitive advantage?\nWhat are customers dislikes and likes about {company_name} products?\nWho are {company_name} biggest competitors?\nWhat are the opportunities and threats within a given market or industry?"
-    # prompt = PromptTemplate.from_template(text)
-    # return prompt.format(company_name=company_name)
-    template = """Conduct competitive marketing research on {company_name}. I want to know what is their competitive advantage, what customers dislike and like about the product and who are their biggest competitors.\nWhat is {company_name} competitive advantage?\nWhat are customers dislikes and likes about {company_name} products?\nWho are {company_name} 
-        biggest competitors?\nWhat are the opportunities and threats within a given market or industry?"""
+    template = """Conduct competitive marketing research on {company_name}. I want to know what is their competitive advantage, 
+    what customers dislike and like about the product and who are their biggest competitors.\nWhat is {company_name} competitive advantage?\n
+    What are customers dislikes and likes about {company_name} products?\nWho are {company_name} 
+    biggest competitors?\nWhat are the opportunities and threats within a given market or industry?"""
     return template.format(company_name=company_name)
 
+# Generate System Template, help open ai to give a better response
+# By giving them a persona of an intelligent market expert
 def generateMarketingSystemTemplate():
     return "You are an intelligent marketing expert, task with conducting competitive market research."
 
