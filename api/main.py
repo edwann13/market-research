@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import openai
 # from langchain.prompts import PromptTemplate
 # from langchain.llms import OpenAI
@@ -11,6 +12,21 @@ from mangum import Mangum
 openai.api_key = "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"
 
 app = FastAPI()
+
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():
