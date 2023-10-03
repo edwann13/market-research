@@ -39,7 +39,7 @@ jobs:
       - aws-cli/setup:
           aws-region: AWS_DEFAULT_REGION
           aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-sescret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
       - run:
           name: Upload to S3
           command: aws s3 cp api.zip s3://serverless-fastapi-ed1/api.zip
