@@ -18,6 +18,14 @@ jobs:
       - run:
           name: Install Dependencies
           command: pip install -r requirements.txt
+      - run:
+          name: Create zipfile archive of dependencies
+          command: |
+            cd venv/lib/python3.11/site-packages
+            zip -r9 ../../../../api.zip .
+      - run:
+          name: Add App To Zipfile
+          command: zip -g ./api.zip -r app
 
 workflows:
   build-test-and-deploy:
