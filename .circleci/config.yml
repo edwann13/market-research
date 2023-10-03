@@ -25,7 +25,7 @@ jobs:
             zip -r9 ../../../../api.zip .
       - run:
           name: Add App To Zipfile
-          command: zip -g ./api.zip -r app
+          command: zip -g ./api.zip -r api
 
 workflows:
   build-test-and-deploy:
