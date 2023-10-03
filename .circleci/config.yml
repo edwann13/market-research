@@ -47,7 +47,8 @@ jobs:
           name: Deploy new Lambda
           command: aws lambda update-function-code --function-name serverless-fastapi-lambda --s3-bucket serverless-fastapi-ed1 --s3-key api.zip
   build:
-    working_directory: ~/repo/client
+    # working_directory: ~/repo/client
+    working_directory: ~/client
     docker:
       - image: cimg/node:18.17.0
     steps:
