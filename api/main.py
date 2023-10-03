@@ -9,7 +9,8 @@ from mangum import Mangum
 
 
 # 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
-openai.api_key = "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"
+# openai.api_key = "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"
+openai.api_key = "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"
 
 app = FastAPI()
 
