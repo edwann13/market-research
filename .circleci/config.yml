@@ -20,12 +20,12 @@ jobs:
           name: Install Dependencies
           command: pip install -r requirements.txt
       - run:
-          name: Create zipfile archive of dependencies
+          name: Create Zipfile Archive of Dependencies
           command: |
             cd venv/lib/python3.11/site-packages
             zip -r9 ../../../../api.zip .
       - run:
-          name: Add App To Zipfile
+          name: Add Api To Zipfile
           command: zip -g ./api.zip -r api
       - persist_to_workspace:
           root: .
@@ -41,27 +41,20 @@ jobs:
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
       - run:
-          name: Upload to S3
+          name: Upload Zip File to S3
           command: aws s3 cp api.zip s3://serverless-fastapi-ed1/api.zip
       - run:
-          name: Deploy new Lambda
+          name: Deploy New Lambda, using Upload S3 Zip File
           command: aws lambda update-function-code --function-name serverless-fastapi-lambda --s3-bucket serverless-fastapi-ed1 --s3-key api.zip
   build-client:
-    # working_directory: ~/repo/client
     working_directory: ~/client
     docker:
       - image: cimg/node:18.17.0
     steps:
       - checkout
       - run:
-          name: Show Items
-          command: ls
-      - run:
           name: Update NPM
           command: "sudo npm install -g npm"
-      # - restore_cache:
-      #     key: dependency-cache-{{ checksum "package-lock.json" }}
-
       - run:
           name: Install Dependencies
           command: cd client && npm install
