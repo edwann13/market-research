@@ -18,7 +18,7 @@ async def root():
     # print(FastAPI)
     # print(prompts)
     # print(generateMarketingPrompt('test comapny'))
-    return {"message": "Hello World"}
+    return {"message": "Code was updated"}
 
 @app.get('/test')
 def test():
