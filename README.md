@@ -1,4 +1,10 @@
 
+# Market Research
+
+A React.js, FastAPI, and AWS Lambda application that allows users to quickly conduct competitive market research.
+
+Backend is supported by Open.ai
+
 ## Backend Deployment
 
 To deploy backend api
