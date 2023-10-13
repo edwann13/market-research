@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 import openai
 from mangum import Mangum
 import os
+import sys
+sys.path.append(sys.path[0] + '/api/python')
+from langchain.llms import openai
 
 openai.api_key = os.environ['OPEN_AI_KEY']
 
