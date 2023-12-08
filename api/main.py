@@ -5,9 +5,10 @@ from mangum import Mangum
 import os
 import sys
 sys.path.append(sys.path[0] + '/api/python')
-from langchain.llms import openai
+# from langchain.llms import openai
 
-openai.api_key = os.environ['OPEN_AI_KEY']
+# openai.api_key = os.environ['OPEN_AI_KEY']
+openai.api_key = "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"
 
 app = FastAPI()
 
@@ -35,9 +36,11 @@ async def root():
 def market_research(company_name):
     system_template = generateMarketingSystemTemplate()
     human_template = generateMarketingPrompt(company_name)
+    # gpt-3.5-turbo-16k-0613
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        max_tokens=1000,
+        # model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo-16k-0613",
+        max_tokens=300,
         messages=[
             {"role": "system", "content": system_template},
             {"role": "user", "content": human_template}
@@ -45,12 +48,17 @@ def market_research(company_name):
     )
     return response
 
+# # Generate Human Prompt based on the company named provided
+# def generateMarketingPrompt(company_name):
+#     template = """Conduct competitive marketing research on {company_name}. I want to know what is their competitive advantage, 
+#     what customers dislike and like about the product and who are their biggest competitors.\nWhat is {company_name} competitive advantage?\n
+#     What are customers dislikes and likes about {company_name} products?\nWho are {company_name} 
+#     biggest competitors?\nWhat are the opportunities and threats within a given market or industry?"""
+#     return template.format(company_name=company_name)
+
 # Generate Human Prompt based on the company named provided
 def generateMarketingPrompt(company_name):
-    template = """Conduct competitive marketing research on {company_name}. I want to know what is their competitive advantage, 
-    what customers dislike and like about the product and who are their biggest competitors.\nWhat is {company_name} competitive advantage?\n
-    What are customers dislikes and likes about {company_name} products?\nWho are {company_name} 
-    biggest competitors?\nWhat are the opportunities and threats within a given market or industry?"""
+    template = """Conduct competitive marketing research on {company_name}. I want to know what is their competitive advantage"""
     return template.format(company_name=company_name)
 
 # Generate System Template, help open ai to give a better response
