@@ -8,7 +8,6 @@ sys.path.append(sys.path[0] + '/api/python')
 # from langchain.llms import openai
 
 # openai.api_key = os.environ['OPEN_AI_KEY']
-openai.api_key = "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"
 
 app = FastAPI()
 
